@@ -7,7 +7,7 @@
       </div>
       <div class="count">
         <small>Count:</small>
-        0/10
+        {{CurrentIndex}}/10
       </div>
     </div>
   </header>
@@ -15,7 +15,8 @@
 
 <script>
 export default {
-  name: "Header"
+  name: "Header",
+  props: ["CurrentIndex"]
 };
 </script>
 
