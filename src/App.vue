@@ -46,4 +46,8 @@ body {
   color: var(--main-font);
   height: 10vh;
 }
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
 </style>
