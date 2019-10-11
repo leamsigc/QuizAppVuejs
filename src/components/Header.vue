@@ -6,7 +6,7 @@
         <span>QuizApp</span>
       </div>
       <div class="count">
-        <small>Count:</small>
+        <small>Correct:</small>
         {{CurrentIndex}}/10
       </div>
     </div>

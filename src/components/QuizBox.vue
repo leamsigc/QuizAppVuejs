@@ -9,12 +9,17 @@
           v-bind:key="item"
           v-for=" item in allAnswers"
           @click.prevent="selectedItem(item)"
-          :class="[itemSelected === item ? 'active': '']"
+          :class="[!submited && item === itemSelected ? 'active': 
+          submited && correctAnswer === item  ? 'correct': submited && itemSelected !== CurrentQuiz.correct_answer && item === itemSelected ? 'incorrect':'']"
         >{{item}}</li>
       </ul>
       <div class="btn-container">
-        <button class="btn btn-primary">Submit</button>
-        <button class="btn btn-secondary" @click="$emit('handleNext')">Next</button>
+        <button
+          class="btn btn-primary"
+          @click="submitAnswer"
+          :disabled="itemSelected === null || submited "
+        >Submit</button>
+        <button :disabled="!submited " class="btn btn-secondary" @click="$emit('handleNext')">Next</button>
       </div>
     </div>
   </div>
@@ -26,22 +31,19 @@ export default {
   data: function() {
     return {
       itemSelected: null,
-      suffleAllAnswers: null
+      suffleAllAnswers: null,
+      submited: false,
+      correctAnswer: this.CurrentQuiz.correct_answer
     };
   },
   props: ["CurrentQuiz"],
   watch: {
-    CurrentQuiz: {
-      inmediate: true,
-      handler() {
-        this.itemSelected = null;
-        this.suffleAnswers();
-      }
+    CurrentQuiz() {
+      this.correctAnswer = this.CurrentQuiz.correct_answer;
+      this.itemSelected = null;
+      this.submited = false;
+      this.suffleAnswers();
     }
-    // () {
-    //   this.itemSelected = null;
-    //   this.suffleAnswers();
-    // }
   },
   computed: {
     allAnswers() {
@@ -49,22 +51,34 @@ export default {
         ...this.CurrentQuiz.incorrect_answers,
         this.CurrentQuiz.correct_answer
       ];
-      return answers;
+      return this.shuffle(answers);
     }
   },
   methods: {
     selectedItem(item) {
       this.itemSelected = item;
     },
+    submitAnswer() {
+      let isCorrect = false;
+      if (this.itemSelected === this.CurrentQuiz.correct_answer) {
+        isCorrect = true;
+        this.$emit("correctAnswersChecker", isCorrect);
+      }
+      this.submited = true;
+    },
+    shuffle(a) {
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    },
     suffleAnswers() {
       let answers = [
         ...this.CurrentQuiz.incorrect_answers,
         this.CurrentQuiz.correct_answer
       ];
-      function shuffle(array) {
-        return array.sort(() => Math.random() - 0.5);
-      }
-      answers = shuffle(answers);
+      answers = this.shuffle(answers);
       this.suffleAllAnswers = answers;
     }
   }
@@ -134,5 +148,12 @@ p {
 }
 .btn-container .btn-secondary {
   margin-left: 1rem;
+}
+button:disabled,
+button[disabled] {
+  cursor: none;
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
 }
 </style>

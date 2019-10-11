@@ -1,7 +1,12 @@
 <template>
   <div id="app">
-    <Header :CurrentIndex="CurrentIndex" />
-    <QuizBox v-if="AllQuiz" :CurrentQuiz="AllQuiz[CurrentIndex]" v-on:handleNext="handleNext" />
+    <Header :CurrentIndex="correctAnswers" />
+    <QuizBox
+      v-if="AllQuiz"
+      :CurrentQuiz="AllQuiz[CurrentIndex]"
+      v-on:handleNext="handleNext"
+      v-on:correctAnswersChecker="correctAnswersChecker"
+    />
   </div>
 </template>
 
@@ -13,6 +18,7 @@ export default {
   name: "app",
   data: function() {
     return {
+      correctAnswers: 0,
       CurrentIndex: 0,
       AllQuiz: null
     };
@@ -22,6 +28,11 @@ export default {
       this.CurrentIndex >= this.AllQuiz.length
         ? (this.CurrentIndex = 0)
         : this.CurrentIndex++;
+    },
+    correctAnswersChecker(isCorrect) {
+      if (isCorrect) {
+        this.correctAnswers++;
+      }
     }
   },
   components: {
@@ -47,6 +58,7 @@ export default {
   --main-color: #134e6f;
   --secondary-color: #ffa822;
   --logo-color: #1ac0c6;
+  --danger-color: tomato;
 }
 * {
   padding: 0;
