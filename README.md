@@ -1,5 +1,7 @@
 # quiz-vuejs
+![QuizAppVuejs](./public/VueJSQuizApp.png)
 
+Simple Quiz App using the https://opentdb.com/ or open Trivia & Vuejs
 ## Project setup
 ```
 npm install
